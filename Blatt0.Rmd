@@ -1,0 +1,256 @@
+---
+title: "Blatt 0"
+output: pdf_document
+---
+
+
+# Aufgabe 2
+# Ein Programm erzeugt einen zufälligen String der Länge 12. Jeder Character wird hierbei zufällig
+# und unabhängig von den restlichen Charactern aus der Menge {H, e, l, o, W, r, d, !, } gezogen, wo-
+#   bei jedes Element diesselbe Wahrscheinlichkeit besitzt und mehrmals gezogen werden kann. Mit
+# welcher Wahrscheinlichkeit werden folgende Strings gebildet:
+#   a) Hello World!
+#   b) orW eoH! !Hl
+# c) rdrdrdrdrdrd
+
+#Menge der Zeichen
+```{r}
+chars <- c('H', 'e', 'l', 'o', 'W', 'r', 'd', '!', ' ')
+```
+
+# Ziehen eines Buchstaben
+#Erzeugen einer Zufallszahl zwischen 1 und 9
+```{r}
+floor(runif(1)*9+1)
+```
+
+#Ausgabe des zugehörigen Buchstabens
+```{r}
+chars[floor(runif(1)*9+1)]
+```
+
+# Ziehen von 12 Buchstaben
+```{r}
+randWord = ""
+for (i in 1:12) {
+  chars[floor(runif(12)*9+1)]
+}
+
+```
+
+Übungslösung
+
+```{r}
+chars <- c('H', 'e', 'l', 'o', 'W', 'r', 'd', '!', ' ')
+wort = c()
+for (i in 1:12) {
+  wort[i] = sample(chars, 1)
+}
+
+wort = paste(wort, collapse="")
+
+wort
+```
+
+# a)
+# Zufällig erzeugter String "Hello World!", 12 Zeichen lang
+# Wahrscheinlichkeit für einzelnendes Zeichen wie gewünscht: 1/9
+# 12 Zeichen lang
+```{r}
+1/9^12
+```
+
+# b) und c) genauso
+
+
+# Aufgabe 2
+
+<!-- S1: In jedem Schritt wird zufällig ein Index i ∈ {1, 2, ..., N } gewählt, wobei jeder Index diesselbe -->
+<!-- Wahrscheinlichkeit besitzt, und überprüft, ob es sich bei V [i] um das Element e handelt. Der -->
+<!-- vorige Schritt wird solange wiederholt, bis ein Eintrag mit dem Element e gefunden wurde. -->
+
+<!-- S2: Ähnlich wie der Algorithmus S1, aber diesmal wählt der Algorithmus zufällig in jeden Schritt -->
+<!-- einen Index aus, welcher noch nicht in einem vorigen Schritt überprüft worden ist. Der -->
+<!-- Algorithmus endet, falls er das Element e gefunden hat oder alle Indizes überprüft worden -->
+<!-- sind. -->
+
+Funktion für Ziehung
+
+```{r}
+wortziehen <- function(alphabeth, zielwort) {
+  wort = c()
+  L = nchar(zielwort)
+  for (i in 1:L) {
+    wort[i] = sample(alphabeth, 1)
+  }
+  
+  wort = paste(wort, collapse="")
+  
+  return(wort == zielwort)
+}
+
+bslpalphabeth = c("a", "b")
+
+counter = 0
+for (i in 1:100) {
+  if (wortziehen(bslpalphabeth, "bab")) {counter +1}
+}
+
+print(counter)
+```
+
+# Aufgabe 3: Zufallssuche
+
+```{r}
+N <- 100
+k <- 2
+n <- seq(from=1, to=N, by=1)
+
+S1 <- function(schritte) {
+  return((1-k/N)^(schritte-1)*(k/N))
+}
+
+
+
+Ende1 <- S1(n)
+
+plot(x = n, y = Ende1, type = "l")
+#plot(x = n, y = n, type = "l")
+
+```
+
+```{r}
+S2 <- function(schritte) {
+  temp <- k/(N-schritte)
+  for(i in 1:schritte-1) {
+    temp <- temp * (1-k/(N-i)) 
+  }
+  return(temp)
+}
+
+#Ende2 <- S2(n)
+
+Ende2 <- n/10
+Ende2[1] <- k/N
+
+for (i in 2:(N-k)) {
+  Ende2[i] <- (1-sum(Ende2[1:i-1]))*k/(N-i+1)
+  #Ende2[i] <- (1-sum(Ende2[1:i-1]))
+  #Ende2[i] <- k/(N-i+1)
+}
+for (i in (N-k+1):N) {
+  Ende2[i] <- 0
+}
+
+plot(x = n, y = Ende2, type = "l")
+
+
+```
+
+# Aufgabe 4: Würfel
+
+<!-- Betrachten Sie die vier Würfel W 1, W 2, W 3 und W 4, welche folgende Zahlen auf ihren Seiten- -->
+<!-- flächen (s 1 , s 2 , s 3 , s 4 , s 5 , s 6 ) eingraviert besitzen: -->
+<!-- W 1: (3,3,3,3,3,3) -->
+<!-- W 2: (4,4,4,4,0,0) -->
+<!-- W 3: (5,5,5,1,1,1) -->
+<!-- W 4: (6,6,2,2,2,2) -->
+
+```{r}
+W1 <- c(3,3,3,3,3,3)
+W2 <- c(4,4,4,4,0,0)
+W3 <- c(5,5,5,1,1,1)
+W4 <- c(6,6,2,2,2,2)
+
+mean(W1)
+mean(W2)
+mean(W3)
+mean(W4)
+
+wuerfeln <- function(WX) {
+  temp <- floor(runif(1)*6+1)
+  return(WX[temp])
+}
+```
+#Würfeln mit allen Würfeln
+```{r}
+wuerfeln(W1)
+wuerfeln(W2)
+wuerfeln(W3)
+wuerfeln(W4)
+```
+#Würfeln mit Vergleich
+```{r}
+n = 2000
+Match12 <- W1[floor(runif(n)*6+1)]>W2[floor(runif(n)*6+1)]
+p12 = length(Match12[Match12==TRUE])/n
+p12
+```
+Übungslösung
+
+```{r}
+n = 2000
+for (i in 1:n) {
+  Match12 <- Match12 +  sample(W1, 1) > sample(W2, 1)
+}
+p12 = length(Match12[Match12==TRUE])/n
+p12
+```
+
+
+
+# Aufgabe 5 - Integral
+
+# a) Funktion norm(t)
+```{r}
+norm <- function(t){
+  temp <- 1/sqrt(2*pi)*exp(-t^2/2);
+  return(temp)
+}
+
+norm(0)
+norm(0.5)
+norm(1)
+```
+
+# b) plot
+```{r}
+xwerte <- seq(from=0, to=1, by=0.01)
+
+plot(x=xwerte, y=norm(xwerte), type = "l", xlim=c(0,1), ylim=c(0,1))
+```
+
+# c) Zufallspunkte
+```{r}
+xwerte <- seq(from=0, to=1, by=0.01)
+
+plot(x=xwerte, y=norm(xwerte), type = "l", xlim=c(0,1), ylim=c(0,1))
+
+
+zufallsx <- runif(1000)
+zufallsy <- runif(1000)
+rot <- zufallsy<=norm(zufallsx)
+
+points(x=zufallsx[rot], y=zufallsy[rot], col="red")
+
+points(x=zufallsx[!rot], y=zufallsy[!rot], col="green")
+
+```
+
+# d) p Dach als Näherung der Fläche des Integrals
+```{r}
+pDach <- length(rot[rot==TRUE])/length(rot)
+pDach
+```
+
+# e) Dichte der Standardnormalverteilung
+
+```{r}
+f <- pnorm(1)-pnorm(0)
+f
+
+delta = pDach - f
+delta
+```
+
+
