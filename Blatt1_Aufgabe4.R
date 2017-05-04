@@ -10,6 +10,9 @@ countbiskopf = function() {
   }
   count
 }
+# Wenn du beim ersten Mal einen Kopf bekommst, zählt count nichts und du bekommst 0 Würfe bis zum Erfolg zurück.
+# Du hast dann also immer die Anzahl der Münzwürfe minus 1 als Rückgabewert.
+# Ich würde den Aufgabentext so interpretieren, dass auch der erfolgreiche Wurf mitgezählt werden muss.
 
 verteilung = function(wdh) {
   # Definiere Vektor der Länge 10
@@ -24,7 +27,7 @@ verteilung = function(wdh) {
   a
 }
 
-plot(verteilung(10000),main='Geometrische Verteilung',type='l'
+plot(verteilung(10000)/10000,main='Geometrische Verteilung',type='l'
      ,xlab='Anzahl Würfe bis Kopf',ylab='Häufigkeit')
 
 
