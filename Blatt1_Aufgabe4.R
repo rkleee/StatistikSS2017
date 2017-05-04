@@ -1,12 +1,12 @@
 countbiskopf = function() {
   # p=0.6 bedeutet: Die Chance, Kopf zu werfen, beträgt 3/5
   m=c('Kopf','Zahl','Zahl','Kopf','Kopf')
-  i=0
+  i='Zahl'
   count=0
   # Zähle die Würfe, bis Kopf kommt
-  while (i==0) {
-    if (sample(m,1)=='Zahl') count=count+1
-    if (sample(m,1)=='Kopf') i=1
+  while (i=='Zahl') {
+    i = sample(m,1)
+    if (i=='Zahl') count=count+1
   }
   count
 }
